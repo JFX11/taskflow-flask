@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+    volumes:
+      - taskflow-data:/data
+    restart: unless-stopped
+volumes:
+  taskflow-data:

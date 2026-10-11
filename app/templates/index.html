@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="intro"><span class="eyebrow">ВАШ ЛИЧНЫЙ ПЛАН</span><h1>Освободите голову.<br><span>Соберите дела в одном месте.</span></h1><p>Запишите задачу, сделайте первый шаг и отметьте результат.</p></section>
+<section class="stats" aria-label="Статистика"><div><span>Всего задач</span><strong>{{ counts.total }}</strong></div><div><span>В работе</span><strong>{{ counts.total - counts.done }}</strong></div><div><span>Выполнено</span><strong>{{ counts.done }}</strong></div></section>
+<section class="panel">
+  <h2>Что нужно сделать?</h2>
+  <form class="add-form" action="{{ url_for('tasks.create') }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="sr-only" for="title">Новая задача</label><input id="title" name="title" placeholder="Например, подготовиться к защите проекта" maxlength="120" required autocomplete="off">
+    <button class="primary" type="submit">+ Добавить</button>
+  </form>
+  {% for category, message in get_flashed_messages(with_categories=true) %}<p class="notice {{ category }}" role="status">{{ message }}</p>{% endfor %}
+  <nav class="filters" aria-label="Фильтр задач">{% for key, label in [('all', 'Все'), ('active', 'В работе'), ('done', 'Выполнено')] %}<a href="{{ url_for('tasks.index', status=key) }}" class="{{ 'selected' if status == key }}" {% if status == key %}aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}</nav>
+  <ul class="task-list">{% for task in tasks %}
+    <li class="task {{ 'completed' if task.done }}" data-testid="task">
+      <form action="{{ url_for('tasks.toggle', task_id=task.id) }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="check" aria-label="{{ 'Вернуть в работу' if task.done else 'Завершить' }}: {{ task.title }}">{{ '✓' if task.done else '○' }}</button></form>
+      <span class="task-title">{{ task.title }}</span>
+      <a class="action" href="{{ url_for('tasks.edit', task_id=task.id) }}" aria-label="Изменить: {{ task.title }}">Изменить</a>
+      <form action="{{ url_for('tasks.delete', task_id=task.id) }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="action delete" aria-label="Удалить: {{ task.title }}">Удалить</button></form>
+    </li>
+  {% else %}<li class="empty"><span class="empty-icon">✓</span><h3>{{ 'Здесь пока нет задач' if status == 'all' else 'Нет задач в этой категории' }}</h3><p>{{ 'Добавьте первое дело — начнём с малого.' if status == 'all' else 'Выберите другой фильтр или добавьте новую задачу.' }}</p></li>{% endfor %}</ul>
+</section>
+{% endblock %}

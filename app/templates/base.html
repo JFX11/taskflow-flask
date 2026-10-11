@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TaskFlow — мои задачи{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header><a class="brand" href="{{ url_for('tasks.index') }}"><span class="logo">✓</span> TaskFlow</a><span class="header-note">Маленькие шаги. Большие результаты.</span></header>
+  <main>{% block content %}{% endblock %}</main>
+  <footer>TaskFlow · Учебный проект на Python и Flask</footer>
+</body>
+</html>
