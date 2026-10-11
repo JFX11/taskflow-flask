@@ -2,6 +2,7 @@
 
 Небольшой планировщик задач на **Python + Flask + SQLite**. Учебный проект с понятной архитектурой, тремя уровнями тестирования и CI/CD в GitHub Actions.
 
+[![CI/CD](https://github.com/JFX11/taskflow-flask/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/JFX11/taskflow-flask/actions/workflows/ci-cd.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-3.1-222222?logo=flask)
 ![Tests](https://img.shields.io/badge/tests-unit%20%7C%20integration%20%7C%20system-48745a)
@@ -81,7 +82,7 @@ Workflow [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) выпол
 
 1. **CI:** установка зависимостей, проверка Ruff и все три уровня тестов на Python 3.11, 3.12 и 3.13.
 2. Сохранение JUnit и отчёта покрытия в артефактах GitHub Actions.
-3. **CD (continuous delivery):** после успешных проверок push в `main` сборка Docker-образа и публикация в GitHub Container Registry (`ghcr.io`). Теги: `latest` и SHA коммита.
+3. **CD (continuous delivery):** после успешных проверок push в `main` сборка Docker-образа и публикация в GitHub Container Registry (`ghcr.io`). Теги: `latest` и SHA коммита. Опубликованный образ запускается на CI-сервере для проверки `/health` и главной страницы.
 
 Публикация использует встроенный `GITHUB_TOKEN`: отдельный токен в коде не нужен. GitHub Actions и запись пакетов должны быть разрешены настройками репозитория/организации. Ошибка любого задания с тестами блокирует публикацию. Pull request и ручной запуск образ не публикуют.
 
@@ -113,7 +114,7 @@ app/
   routes.py         HTTP-маршруты и SQL-запросы
   templates/        HTML-шаблоны Jinja2
   static/style.css  адаптивное оформление
- tests/
+tests/
   unit/             модульные тесты
   integration/      интеграционные тесты
   system/           браузерные тесты
